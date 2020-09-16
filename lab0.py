@@ -41,7 +41,7 @@ class NeuralNetwork_2Layer():
 
     # Activation function.
     def __sigmoid(self, x):
-        return 1 / (1 + math.exp(-x))
+        return 1 / (1 + np.exp(-x))
 
     # Activation prime function.
     def __sigmoidDerivative(self, x):
