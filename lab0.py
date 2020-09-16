@@ -41,11 +41,12 @@ class NeuralNetwork_2Layer():
 
     # Activation function.
     def __sigmoid(self, x):
-        pass   #TODO: implement
+        return 1 / (1 + math.exp(-x))
 
     # Activation prime function.
     def __sigmoidDerivative(self, x):
-        pass   #TODO: implement
+        s = self.__sigmoid(x)
+        return s * (1 - s)
 
     # Batch generator for mini-batches. Not randomized.
     def __batchGenerator(self, l, n):
@@ -54,6 +55,11 @@ class NeuralNetwork_2Layer():
 
     # Training with backpropagation.
     def train(self, xVals, yVals, epochs = 100000, minibatches = True, mbs = 100):
+        # layer1, layer2 = self.__forward(xVals)
+        # layer2_delta = (yVals - layer2) * self.__sigmoidDerivative(layer2)
+        # layer1_delta = layer2_delta.dot(self.W2.T) * self.__sigmoidDerivative(layer1)
+        # self.W1 += layer1.T.dot(layer2_delta)
+        # self.W2 += xVals.T.dot(layer1_delta)
         pass                                   #TODO: Implement backprop. allow minibatches. mbs should specify the size of each minibatch.
 
     # Forward pass.
