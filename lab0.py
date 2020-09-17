@@ -4,6 +4,7 @@ import numpy as np
 import tensorflow as tf
 from tensorflow import keras
 from tensorflow.keras.utils import to_categorical
+from sklearn.metrics import confusion_matrix, f1_score
 import random
 
 
@@ -162,12 +163,20 @@ def runModel(data, model):
 
 def evalResults(data, preds):   #TODO: Add F1 score confusion matrix here.
     xTest, yTest = data
+    yTrue = np.argmax(yTest, axis=1) 
+    yPred = np.argmax(preds, axis=1)
     acc = 0
     for i in range(preds.shape[0]):
         if np.array_equal(preds[i], yTest[i]):   acc = acc + 1
     accuracy = acc / preds.shape[0]
+
+    #reference: https://scikit-learn.org/stable/modules/generated/sklearn.metrics.confusion_matrix.html
     print("Classifier algorithm: %s" % ALGORITHM)
     print("Classifier accuracy: %f%%" % (accuracy * 100))
+    print("Confusion Matrix:")
+    print(confusion_matrix(yTrue,yPred))
+    print("Classifier f1-score: %f%%" % (accuracy * 100))
+    print(f1_score(yTrue, yPred, average='macro'))
     print()
 
 
