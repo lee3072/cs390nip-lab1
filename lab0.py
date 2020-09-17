@@ -23,8 +23,8 @@ IMAGE_SIZE = 784
 
 # Use these to set the algorithm to use.
 # ALGORITHM = "guesser"
-#ALGORITHM = "custom_net"
-ALGORITHM = "tf_net"
+ALGORITHM = "custom_net"
+# ALGORITHM = "tf_net"
 
 
 
@@ -54,24 +54,20 @@ class NeuralNetwork_2Layer():
             yield l[i : i + n]
 
     # Training with backpropagation.
-    def train(self, xVals, yVals, epochs = 100000, minibatches = True, mbs = 100):
+    def train(self, xVals, yVals, epochs = 100, minibatches = True, mbs = 100):
         #Done: Implement backprop. allow minibatches. mbs should specify the size of each minibatch.
         #reference: https://thispointer.com/python-use-of-yield-keyword-generators-explained-with-examples/
         #reference: https://www.tensorflow.org/guide/eager
         xValsBatchGen = self.__batchGenerator(xVals,mbs)
         yValsBatchGen = self.__batchGenerator(yVals,mbs)
-        while True:
-            try:
-                xValsBatch = next(xValsBatchGen)
-                yValsBatch = next(yValsBatchGen)
-                for i in range(epochs):
-                    layer1, layer2 = self.__forward(xValsBatch)
-                    layer2_delta = (yValsBatch - layer2) * self.__sigmoidDerivative(layer2)
-                    layer1_delta = layer2_delta.dot(self.W2.T) * self.__sigmoidDerivative(layer1)
-                    self.W1 += layer1.T.dot(layer2_delta) * self.lr
-                    self.W2 += xVals.T.dot(layer1_delta) * self.lr    
-            except StopIteration:
-                break
+        for i in range(epochs):
+            xValsBatch = next(xValsBatchGen)
+            yValsBatch = next(yValsBatchGen)
+            layer1, layer2 = self.__forward(xValsBatch)
+            layer2_delta = (yValsBatch - layer2) * self.__sigmoidDerivative(layer2)
+            layer1_delta = layer2_delta.dot(self.W2.T) * self.__sigmoidDerivative(layer1)
+            self.W1 += xValsBatch.T.dot(layer1_delta) * self.lr 
+            self.W2 += layer1.T.dot(layer2_delta) * self.lr    
         
                                           
 
@@ -133,9 +129,10 @@ def trainModel(data):
     if ALGORITHM == "guesser":
         return None   # Guesser has no model, as it is just guessing.
     elif ALGORITHM == "custom_net":
-        print("Building and training Custom_NN.")
-        print("Not yet implemented.")                   #TODO: Write code to build and train your custon neural net.
-        return None
+        #Done: Write code to build and train your custon neural net.
+        model = NeuralNetwork_2Layer(784, 10, 10000)
+        model.train(xTrain.reshape(60000,784),yTrain) # do the flatten job like tf.keras.layers.flatten by reshape
+        return model
     elif ALGORITHM == "tf_net":
         #Done: Write code to build and train your keras neural net.
         model = tf.keras.models.Sequential([tf.keras.layers.Flatten(),tf.keras.layers.Dense(512,activation=tf.nn.relu),tf.keras.layers.Dense(10,activation=tf.nn.softmax)])
@@ -151,9 +148,8 @@ def runModel(data, model):
     if ALGORITHM == "guesser":
         return guesserClassifier(data)
     elif ALGORITHM == "custom_net":
-        print("Testing Custom_NN.")
-        print("Not yet implemented.")                   #TODO: Write code to run your custon neural net.
-        return None
+        #Done: Write code to run your custon neural net.
+        return to_categorical(np.argmax(model.predict(data.reshape(10000,784)), axis=1), NUM_CLASSES)
     elif ALGORITHM == "tf_net":
         #Done: Write code to run your keras neural net.
         # predicted data will be an array representing the predicted number,
