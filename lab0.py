@@ -131,7 +131,7 @@ def trainModel(data):
     elif ALGORITHM == "custom_net":
         #Done: Write code to build and train your custon neural net.
         model = NeuralNetwork_2Layer(784, 10, 10000)
-        model.train(xTrain.reshape(60000,784),yTrain) # do the flatten job like tf.keras.layers.flatten by reshape
+        model.train(xTrain.reshape(60000,784),yTrain) # do the flatten job like tf.keras.layers.flatten by reshape, reference: https://stackoverflow.com/questions/18757742/how-to-flatten-only-some-dimensions-of-a-numpy-array
         return model
     elif ALGORITHM == "tf_net":
         #Done: Write code to build and train your keras neural net.
